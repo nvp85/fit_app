@@ -14,3 +14,11 @@ This is a learning project, made using Flask. It's a simple RESTful fitness web 
 |/food/food_id|GET, PATCH, DELETE|get info of a food product by id; update the info; remove a food product by id|
 |/exercises/|GET, POST| get a list of all exercises; add a new exercise|
 |/exercises/exercise_id|GET, PATCH, DELETE|get exercise info by id; update exercise info; delete exercise info by id|
+
+## Technologies
+alembic  1.6.5  
+Flask  2.0.1  
+SQLAlchemy  1.4.17  
+psycopg2-binary  2.9.1  
+
+
