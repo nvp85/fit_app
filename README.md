@@ -22,19 +22,29 @@ SQLAlchemy  1.4
 psycopg2-binary  2.9.5  
 
 ## Launch
-- requires running postgres on the port 5432
-- create a database
+The project requires running postgres on the port 5432. 
+To launch it locally implement following steps:
+- Clone the repository
+```
+$ git clone https://github.com/nvp85/fit_app.git
+```
+- Create a database
 ```
 $ psql -c 'CREATE DATABASE fit_app;'
 ```
 
-- create a virtual environment, install requirements.txt
+- Create and activate a virtual environment, install requirements.txt
 ```
 $ python -m venv venv
+$ . Scripts/activate (for windows)
 $ python -m pip install --upgrade pip
 $ pip install requirements.txt
 ```
-- migrate  
+- Migrate. To generate migrations the project uses Flask-Migrate and Alembic. From the my_app folder run to generate and apply migrations: 
+```
+$ flask db migrate
+$ flask db upgrade
+```
 
 - Start the flask web server with debug mode on:
 ```
