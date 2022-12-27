@@ -40,9 +40,8 @@ $ . Scripts/activate (for windows)
 $ python -m pip install --upgrade pip
 $ pip install requirements.txt
 ```
-- Migrate. To generate migrations the project uses Flask-Migrate and Alembic. From the my_app folder run to generate and apply migrations: 
+- Migrate. To handle migrations the project uses Flask-Migrate and Alembic. To apply migrations from the my_app folder run : 
 ```
-$ flask db migrate
 $ flask db upgrade
 ```
 
@@ -51,4 +50,5 @@ $ flask db upgrade
 $export FLASK_DEBUG=1
 $ flask run
 ```
+# Examples
 
