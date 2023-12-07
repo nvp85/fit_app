@@ -1,6 +1,7 @@
 # fit_app
 ## Description
-This is a learning project, made with Flask, SQLAlchemy, Alembic, and Postgresql. It's a simple RESTful fitness web application with endpoints for managing user data, food nutrients, exercises, and tracking daily activities and calorie intake. 
+This is a learning project, made with Flask, SQLAlchemy, Alembic, and Postgresql. It's a simple RESTful fitness web application with endpoints for managing user data, food nutrients, exercises, and tracking daily activities and calorie intake.
+
 API endpoints:
 
 |path|methods|description|
