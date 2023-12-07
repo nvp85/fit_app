@@ -1,6 +1,7 @@
 # fit_app
 ## Description
-This is a learning project, made using Flask. It's a simple RESTful fitness web application to track consumed calories and exercises with the following API endpoints:
+This is a learning project, made with Flask, SQLAlchemy, Alembic, and Postgresql. It's a simple RESTful fitness web application with endpoints for managing user data, food nutrients, exercises, and tracking daily activities and calorie intake. 
+API endpoints:
 
 |path|methods|description|
 |----|-------|-----------|
@@ -22,8 +23,8 @@ SQLAlchemy  1.4
 psycopg2-binary  2.9.5  
 
 ## Launch
-The project requires running postgres on the port 5432. 
-To launch it locally implement following steps:
+The project requires running Postgres on port 5432. 
+To launch it locally implement the following steps:
 - Clone the repository
 ```
 $ git clone https://github.com/nvp85/fit_app.git
@@ -36,7 +37,7 @@ $ psql -c 'CREATE DATABASE fit_app;'
 - Create and activate a virtual environment, install requirements.txt
 ```
 $ python -m venv venv
-$ . Scripts/activate (for windows)
+$ . Scripts/activate (for Windows)
 $ python -m pip install --upgrade pip
 $ pip install requirements.txt
 ```
