@@ -23,8 +23,8 @@ def verify_password(username_or_token, password):
 @bp.route('/login', methods=['POST'])
 @auth.login_required
 def get_token():
-    token = session. g.user.generate_auth_token(600)
-    return jsonify({ 'token': token.decode('ascii'), 'duration': 600 })
+    token = g.user.generate_auth_token(600)
+    return jsonify({ 'token': token, 'duration': 600 })
 
 @bp.route('', methods=['GET'])
 @auth.login_required # TODO: admin account or remove this endpoint all together

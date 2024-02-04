@@ -2,7 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt                     
-from ..wsgi import app
+from flask import current_app as app
+import time
 
 db = SQLAlchemy()
 
@@ -65,13 +66,13 @@ class User(db.Model):
         return check_password_hash(self.password, password)
     
     def generate_auth_token(self, expiration=600):
-        return jwt.encode({'id': self.id, 'exp': datetime.now(tz=datetime.timezone.utc)+expiration}, 
+        return jwt.encode({'id': self.id, 'exp': time.time()+expiration}, 
                            app.config['SECRET_KEY'], algorithm='HS256')
     
     @staticmethod
     def verify_auth_token(token):
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'], algorithm=['HS256'])
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
         except:
             return
         return User.query.get(data['id'])
