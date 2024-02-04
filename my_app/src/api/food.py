@@ -52,7 +52,7 @@ def delete(id: int):
 
 
 @bp.route('/<int:id>', methods=['PATCH'])
-def update():
+def update(id:int):
     if not request.json:
         return abort(400)
     item = Food.query.get_or_404(id)
