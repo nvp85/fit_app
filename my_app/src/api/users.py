@@ -1,21 +1,33 @@
-from flask import Blueprint, jsonify, abort, request, session
+from flask import Blueprint, jsonify, abort, request, session, g
 from ..models import Exercise, User, db, food_tracker_table, Food, exercises_tracker_table
-import hashlib
-import secrets
 import sqlalchemy
 import datetime
-
-
-def scramble(password: str):
-    """Hash and salt the given password"""
-    salt = secrets.token_hex(16)
-    return hashlib.sha512((password + salt).encode('utf-8')).hexdigest()
+from flask_httpauth import HTTPBasicAuth
 
 
 bp = Blueprint('users', __name__, url_prefix='/users')
+auth = HTTPBasicAuth()
 
+@auth.verify_password
+def verify_password(username_or_token, password):
+    # token
+    user = User.verify_auth_token(username_or_token)
+    if not user:
+        # username
+        user = User.query.filter_by(username = username_or_token).first()
+        if not user or not user.verify_password(password):
+            return False
+    g.user = user
+    return True
+
+@bp.route('/login', methods=['POST'])
+@auth.login_required
+def get_token():
+    token = session. g.user.generate_auth_token(600)
+    return jsonify({ 'token': token.decode('ascii'), 'duration': 600 })
 
 @bp.route('', methods=['GET'])
+@auth.login_required # TODO: admin account or remove this endpoint all together
 def index():
     users = User.query.all()
     result = []
@@ -25,6 +37,7 @@ def index():
 
 
 @bp.route('/<int:id>', methods=['GET'])
+@auth.login_required
 def show(id: int):
     usr = User.query.get_or_404(id)
     return jsonify(usr.serialize())
@@ -32,14 +45,17 @@ def show(id: int):
 
 @bp.route('', methods=['POST'])
 def create():
-    if "username" not in request.json \
-            or "password" not in request.json \
-            or len(request.json["username"]) < 3 \
-            or len(request.json["password"]) < 8:
+    username = request.json.get('username')
+    password = request.json.get('password')
+    if username is None or password is None \
+            or len(username) < 3 \
+            or len(password) < 8:
         return abort(400)
+    if User.query.filter_by(username = username).first() is not None:
+        return abort(400) # username exists
     usr = User(
-        request.json["username"],
-        scramble(request.json["password"])
+        username,
+        password
     )
     if 'heigt' in request.json:
         usr.height = request.json["height"]
@@ -51,6 +67,7 @@ def create():
 
 
 @bp.route('/<int:id>', methods=['DELETE'])
+@auth.login_required
 def delete(id: int):
     usr = User.query.get_or_404(id)
     try:
@@ -62,6 +79,7 @@ def delete(id: int):
 
 
 @bp.route('/<int:id>', methods=['PATCH'])
+@auth.login_required
 def update(id: int):
     usr = User.query.get_or_404(id)
     try:
@@ -74,7 +92,7 @@ def update(id: int):
         if "password" in request.json:
             if len(request.json["password"]) < 8:
                 return jsonify(False)
-            usr.password = scramble(request.json["password"])
+            usr.hash_password(request.json["password"])
         if 'height' in request.json:
             usr.height = request.json["height"]
         if 'weight' in request.json:
@@ -86,6 +104,7 @@ def update(id: int):
 
 
 @bp.route('/<int:id>/food_records/<date>', methods=['GET'])
+@auth.login_required
 def food_tracker(id: int, date: str):
     try:
         date = datetime.date.fromisoformat(date)
@@ -113,6 +132,7 @@ def food_tracker(id: int, date: str):
 
 
 @bp.route('/<int:id>/food_tracker', methods=['POST'])
+@auth.login_required
 def food_tracker_create(id: int):
     usr = User.query.get_or_404(id)
     if "food_id" not in request.json or "amount" not in request.json:
@@ -129,6 +149,7 @@ def food_tracker_create(id: int):
 
 
 @bp.route('/<int:id>/exercises_records/<date>', methods=['GET'])
+@auth.login_required
 def exercises_tracker(id: int, date: str):
     try:
         date = datetime.date.fromisoformat(date)
@@ -154,6 +175,7 @@ def exercises_tracker(id: int, date: str):
 
 
 @bp.route('/<int:id>/exercises_tracker', methods=['POST'])
+@auth.login_required
 def exercises_tracker_cre(id: int):
     usr = User.query.get_or_404(id)
     if "exercise_id" not in request.json:
