@@ -6,6 +6,7 @@ API endpoints:
 
 |path|methods|description|
 |----|-------|-----------|
+|/users/login|POST| get an authentication token|
 |/users|GET, POST| get list of all users; create a new user|
 |/user/:user_id| GET, PATCH, DELETE| get a user's info by id; update user's info; delete a user by id|
 |/users/:user_id/food_records/:date|GET | get all the food records for the user on the specific date|
@@ -22,6 +23,7 @@ alembic  1.6.5
 Flask  2.2.2  
 SQLAlchemy  1.4  
 psycopg2-binary  2.9.5  
+pyJWT
 
 ## Launch
 The project requires running Postgres on port 5432. 
