@@ -176,7 +176,7 @@ def exercises_tracker(id: int, date: str):
 
 @bp.route('/<int:id>/exercises_tracker', methods=['POST'])
 @auth.login_required
-def exercises_tracker_cre(id: int):
+def exercises_tracker_create(id: int):
     usr = User.query.get_or_404(id)
     if "exercise_id" not in request.json:
         return abort(400)
