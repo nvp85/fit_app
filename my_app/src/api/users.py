@@ -57,7 +57,7 @@ def create():
         username,
         password
     )
-    if 'heigt' in request.json:
+    if 'height' in request.json:
         usr.height = request.json["height"]
     if 'weight' in request.json:
         usr.current_weight = request.json["weight"]
